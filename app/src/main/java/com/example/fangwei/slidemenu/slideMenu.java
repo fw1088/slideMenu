@@ -47,13 +47,13 @@ public class slideMenu extends FrameLayout {
 
     private float mdownx;
 
+    private float ydis = 100;
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (ev.getX()<50) {
+        if (ev.getX() < 50) {
             return mViewDragHelper.shouldInterceptTouchEvent(ev);
-        }
-        else
-        {
+        } else {
             return super.onInterceptTouchEvent(ev);
         }
     }
@@ -108,15 +108,15 @@ public class slideMenu extends FrameLayout {
 
         @Override
         public boolean tryCaptureView(View child, int pointerId) {
-            Log.e("down","====>"+mdownx+"|"+dipsToPixels(mMainView.getLeft()));
+            Log.e("down", "====>" + mdownx + "|" + dipsToPixels(mMainView.getLeft()));
 //            if (mdownx<500&&mMainView == child)
 //            {
 //                return true;
 //            }
 //            else if (mMainView.getLeft()> mWidth - 10){
-                return mMainView == child;
-           // }
-           // return false;
+            return mMainView == child || mMenuView == child;
+            // }
+            // return false;
         }
 
         @Override
@@ -127,10 +127,19 @@ public class slideMenu extends FrameLayout {
         @Override
         public int clampViewPositionHorizontal(View child, int left, int dx) {
             Log.e("slide", "====>" + left);
-            if (left > mWidth) {
-                left = mWidth;
-            } else if (left < 0) {
-                left = 0;
+            if (child == mMainView) {
+                if (left > mWidth) {
+                    left = mWidth;
+                } else if (left < 0) {
+                    left = 0;
+                }
+            }
+            else if (child == mMenuView)
+            {
+                if (left>0)
+                {
+                    left = 0;
+                }
             }
             return left;
         }
@@ -138,16 +147,14 @@ public class slideMenu extends FrameLayout {
         @Override
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
             super.onViewReleased(releasedChild, xvel, yvel);
-            //Log.e("testbig","=====>"+xvel);
+            Log.e("testbig", "=====>" + xvel);
             if (mdx < 0) {
                 mViewDragHelper.smoothSlideViewTo(mMainView, 0, 0);
                 ViewCompat.postInvalidateOnAnimation(slideMenu.this);
-            } else if (mMainView.getLeft()>15){
+            } else if (mMainView.getLeft() > 15) {
                 mViewDragHelper.smoothSlideViewTo(mMainView, mWidth, 0);
                 ViewCompat.postInvalidateOnAnimation(slideMenu.this);
-            }
-            else
-            {
+            } else {
                 mViewDragHelper.smoothSlideViewTo(mMainView, 0, 0);
                 ViewCompat.postInvalidateOnAnimation(slideMenu.this);
             }
@@ -163,7 +170,7 @@ public class slideMenu extends FrameLayout {
                 bottom = mMenuView.getBottom();
                 isFirst = false;
                 xdel = 50f / (float) mWidth;
-                ydel = 40f / (float) mWidth;
+                ydel = ydis / (float) mWidth;
                 mainTop = mMainView.getTop();
                 mainBottom = mMainView.getBottom();
                 mHeight = mMenuView.getMeasuredHeight();
@@ -171,22 +178,23 @@ public class slideMenu extends FrameLayout {
                 mtop = mMenuView.getTop();
                 mainWidth = mMainView.getWidth();
             }
-            Log.e("big","====>"+dx);
-            if (changedView == mMainView && mMainView.getLeft()<mWidth-20&&dx>0&&isdisfirst) {
+            Log.e("big", "====>" + dx);
+            if ((changedView == mMainView || changedView == mMenuView) && mMainView.getLeft() < mWidth - 20 && dx > 0 && isdisfirst) {
                 isFirst = false;
-                mMenuView.layout(-50, mtop + 40, -50 + mMenuView.getWidth(), bottom - 40);
+                mMenuView.layout(-50, mtop + (int) ydis, -50 + mMenuView.getWidth(), bottom - (int) ydis);
                 mMenuView.setVisibility(View.VISIBLE);
             }
 
-            if (changedView == mMainView) {
-                mMenuView.layout((int) (-50f + (float) left * xdel + 0.5), (int) (((float) mtop + 40f) - ((float) left) * ydel + 0.5), (int) (-50f + mWidth + xdel * left + 0.5), (int) (bottom - 40f + left * ydel + 0.5));
+            if (changedView == mMainView || changedView == mMenuView) {
+                int lefttest = mMainView.getLeft();
+                mMenuView.layout((int) (-50f + (float) lefttest * xdel + 0.5), (int) (((float) mtop + ydis) - ((float) lefttest) * ydel + 0.5), (int) (-50f + mWidth + xdel * lefttest + 0.5), (int) (bottom - ydis + lefttest * ydel + 0.5));
 
-                mMainView.layout(left, (int) (mainTop + ydel * left + 0.5), left + mainWidth, (int) (mainBottom - ydel * left + 0.5));
+                mMainView.layout(lefttest, (int) (mainTop + ydel * lefttest + 0.5), lefttest + mainWidth, (int) (mainBottom - ydel * lefttest + 0.5));
             }
-            if (left <3 && dx < 0)
-            {
+            if ((changedView == mMainView)&&left < 3 && dx < 0) {
                 mMenuView.setVisibility(View.INVISIBLE);
             }
+
         }
 
         @Override
@@ -202,7 +210,7 @@ public class slideMenu extends FrameLayout {
     };
 
 
-    private int dipsToPixels(float dips){
+    private int dipsToPixels(float dips) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dips, getResources().getDisplayMetrics());
     }
 }
