@@ -42,6 +42,8 @@ public class slideMenu extends FrameLayout {
 
     private float ydel;
 
+    private int mdx;
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         return mViewDragHelper.shouldInterceptTouchEvent(ev);
@@ -117,7 +119,8 @@ public class slideMenu extends FrameLayout {
         @Override
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
             super.onViewReleased(releasedChild, xvel, yvel);
-            if (mMainView.getLeft() < 100) {
+            //Log.e("testbig","=====>"+xvel);
+            if (mdx < 0) {
                 mViewDragHelper.smoothSlideViewTo(mMainView, 0, 0);
                 ViewCompat.postInvalidateOnAnimation(slideMenu.this);
             } else {
@@ -130,6 +133,7 @@ public class slideMenu extends FrameLayout {
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
             super.onViewPositionChanged(changedView, left, top, dx, dy);
 
+            mdx = dx;
             if (isFirst) {
                 mWidth = mMenuView.getMeasuredWidth();
                 bottom = mMenuView.getBottom();
@@ -143,7 +147,7 @@ public class slideMenu extends FrameLayout {
                 mtop = mMenuView.getTop();
                 mainWidth = mMainView.getWidth();
             }
-            Log.e("big","====>"+mMainView.getLeft());
+            Log.e("big","====>"+dx);
             if (changedView == mMainView && mMainView.getLeft()<110&&dx>0&&isdisfirst) {
                 isFirst = false;
                 mMenuView.layout(-50, mtop + 40, -50 + mMenuView.getWidth(), bottom - 40);
