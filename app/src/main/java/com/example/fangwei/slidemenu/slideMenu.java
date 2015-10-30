@@ -109,14 +109,14 @@ public class slideMenu extends FrameLayout {
         @Override
         public boolean tryCaptureView(View child, int pointerId) {
             Log.e("down","====>"+mdownx+"|"+dipsToPixels(mMainView.getLeft()));
-            if (mdownx<500&&mMainView == child)
-            {
-                return true;
-            }
-            else if (mMainView.getLeft()> mWidth - 10){
+//            if (mdownx<500&&mMainView == child)
+//            {
+//                return true;
+//            }
+//            else if (mMainView.getLeft()> mWidth - 10){
                 return mMainView == child;
-            }
-            return false;
+           // }
+           // return false;
         }
 
         @Override
@@ -142,8 +142,13 @@ public class slideMenu extends FrameLayout {
             if (mdx < 0) {
                 mViewDragHelper.smoothSlideViewTo(mMainView, 0, 0);
                 ViewCompat.postInvalidateOnAnimation(slideMenu.this);
-            } else if (mMainView.getLeft()>5){
+            } else if (mMainView.getLeft()>15){
                 mViewDragHelper.smoothSlideViewTo(mMainView, mWidth, 0);
+                ViewCompat.postInvalidateOnAnimation(slideMenu.this);
+            }
+            else
+            {
+                mViewDragHelper.smoothSlideViewTo(mMainView, 0, 0);
                 ViewCompat.postInvalidateOnAnimation(slideMenu.this);
             }
         }
@@ -167,7 +172,7 @@ public class slideMenu extends FrameLayout {
                 mainWidth = mMainView.getWidth();
             }
             Log.e("big","====>"+dx);
-            if (changedView == mMainView && mMainView.getLeft()<110&&dx>0&&isdisfirst) {
+            if (changedView == mMainView && mMainView.getLeft()<mWidth-20&&dx>0&&isdisfirst) {
                 isFirst = false;
                 mMenuView.layout(-50, mtop + 40, -50 + mMenuView.getWidth(), bottom - 40);
                 mMenuView.setVisibility(View.VISIBLE);
@@ -182,9 +187,6 @@ public class slideMenu extends FrameLayout {
             {
                 mMenuView.setVisibility(View.INVISIBLE);
             }
-
-
-
         }
 
         @Override
