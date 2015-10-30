@@ -5,6 +5,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -44,10 +45,19 @@ public class slideMenu extends FrameLayout {
 
     private int mdx;
 
+    private float mdownx;
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return mViewDragHelper.shouldInterceptTouchEvent(ev);
+        if (ev.getX()<50) {
+            return mViewDragHelper.shouldInterceptTouchEvent(ev);
+        }
+        else
+        {
+            return super.onInterceptTouchEvent(ev);
+        }
     }
+
 
     @Override
     public void computeScroll() {
@@ -58,6 +68,7 @@ public class slideMenu extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        mdownx = event.getX();
         mViewDragHelper.processTouchEvent(event);
         return true;
     }
@@ -97,7 +108,15 @@ public class slideMenu extends FrameLayout {
 
         @Override
         public boolean tryCaptureView(View child, int pointerId) {
-            return mMainView == child;
+            Log.e("down","====>"+mdownx+"|"+dipsToPixels(mMainView.getLeft()));
+            if (mdownx<500&&mMainView == child)
+            {
+                return true;
+            }
+            else if (mMainView.getLeft()> mWidth - 10){
+                return mMainView == child;
+            }
+            return false;
         }
 
         @Override
@@ -123,7 +142,7 @@ public class slideMenu extends FrameLayout {
             if (mdx < 0) {
                 mViewDragHelper.smoothSlideViewTo(mMainView, 0, 0);
                 ViewCompat.postInvalidateOnAnimation(slideMenu.this);
-            } else {
+            } else if (mMainView.getLeft()>5){
                 mViewDragHelper.smoothSlideViewTo(mMainView, mWidth, 0);
                 ViewCompat.postInvalidateOnAnimation(slideMenu.this);
             }
@@ -179,4 +198,9 @@ public class slideMenu extends FrameLayout {
             super.onViewDragStateChanged(state);
         }
     };
+
+
+    private int dipsToPixels(float dips){
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dips, getResources().getDisplayMetrics());
+    }
 }
