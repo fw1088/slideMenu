@@ -47,7 +47,7 @@ public class slideMenu extends FrameLayout {
 
     private float mdownx;
 
-    private float ydis = 100;
+    private float ydis = 30;
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
