@@ -8,14 +8,20 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+
+import java.util.List;
 
 /**
  * Created by fangwei on 15/10/29.
  */
 public class slideMenu extends FrameLayout {
+
+    private Context mcontext;
 
     boolean isFirst = true;
 
@@ -47,16 +53,24 @@ public class slideMenu extends FrameLayout {
 
     private float mdownx;
 
-    private float ydis = 30;
+    private float ydis = 60;
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+
+//        if (mMainView.getLeft()==0&&mMenuView.getVisibility() == VISIBLE)
+//        {
+//            mMenuView.setVisibility(INVISIBLE);
+//        }
+
         if (ev.getX() < 50) {
             return mViewDragHelper.shouldInterceptTouchEvent(ev);
         } else {
             return super.onInterceptTouchEvent(ev);
         }
     }
+
+
 
 
     @Override
@@ -76,16 +90,19 @@ public class slideMenu extends FrameLayout {
     public slideMenu(Context context) {
         super(context);
         initView();
+        context = mcontext;
     }
 
     public slideMenu(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
+        mcontext = context;
     }
 
     public slideMenu(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView();
+        mcontext = context;
     }
 
     @Override
@@ -93,10 +110,57 @@ public class slideMenu extends FrameLayout {
         super.onFinishInflate();
         mMenuView = (LinearLayout) getChildAt(0);
         mMainView = (LinearLayout) getChildAt(1);
+
+        ListView list = (ListView)mMenuView.findViewById(R.id.menulist);
+
+        ListView listmain = (ListView)mMainView.findViewById(R.id.mainlist);
+
+        ArrayAdapter<String>  adapter = new ArrayAdapter<String>(mcontext,android.R.layout.simple_expandable_list_item_1);
+
+        adapter.add("String1");
+        adapter.add("String12");
+        adapter.add("String1");
+        adapter.add("String12");
+        adapter.add("String1");
+        adapter.add("String12");
+        adapter.add("String1");
+        adapter.add("String12");
+        adapter.add("String1");
+        adapter.add("String12");
+        adapter.add("String1");
+        adapter.add("String12");
+
+        adapter.add("String1");
+        adapter.add("String12");
+        adapter.add("String1");
+        adapter.add("String12");
+        adapter.add("String1");
+        adapter.add("String12");
+
+        adapter.add("String1");
+        adapter.add("String12");
+        adapter.add("String1");
+        adapter.add("String12");
+        adapter.add("String1");
+        adapter.add("String12");
+        adapter.add("String1");
+        adapter.add("String12");
+        adapter.add("String1");
+        adapter.add("String12");
+        adapter.add("String1");
+        adapter.add("String12");
+
+        list.setAdapter(adapter);
+
+        listmain.setAdapter(adapter);
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        if (mMainView.getLeft() ==0&& mMenuView.getVisibility()== VISIBLE)
+        {
+            mMenuView.setVisibility(INVISIBLE);
+        }
         super.onSizeChanged(w, h, oldw, oldh);
     }
 
@@ -191,7 +255,7 @@ public class slideMenu extends FrameLayout {
 
                 mMainView.layout(lefttest, (int) (mainTop + ydel * lefttest + 0.5), lefttest + mainWidth, (int) (mainBottom - ydel * lefttest + 0.5));
             }
-            if ((changedView == mMainView)&&left < 3 && dx < 0) {
+            if ((changedView == mMainView)&&left==0 && dx < 0) {
                 mMenuView.setVisibility(View.INVISIBLE);
             }
 
