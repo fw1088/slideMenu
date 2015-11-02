@@ -8,35 +8,25 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
+
     <LinearLayout
-        android:visibility="invisible"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:alpha="0.9"
+        android:background="@android:color/holo_blue_bright"
         android:gravity="center"
         android:orientation="vertical"
-        android:alpha="0.9"
-        android:layout_gravity="center_vertical"
-        android:background="@android:color/holo_blue_bright"
-        android:layout_height="match_parent"
-        android:layout_width="240dp">
-       <ListView
-           android:layout_marginLeft="40dp"
-           android:id="@+id/menulist"
-           android:layout_height="wrap_content"
-           android:layout_width="match_parent"/>
-      </LinearLayout>
+        android:visibility="invisible"></LinearLayout>
+
     <LinearLayout
 
-        android:alpha="0.9"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:background="@android:color/holo_green_light"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent">
-      <ListView
-          android:layout_marginLeft="40dp"
-          android:id="@+id/mainlist"
-          android:layout_height="wrap_content"
-          android:layout_width="match_parent"/>
-        </LinearLayout>
+        android:alpha="0.9"
+        android:background="@android:color/holo_green_light"
+        android:gravity="center"
+        android:orientation="vertical"></LinearLayout>
 
 
 </com.example.fangwei.slidemenu.slideMenu>
